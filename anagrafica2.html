@@ -2,85 +2,156 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anagrafica</title>
-    <link rel="stylesheet" href="https://star08-web.pages.dev/css/pico/pico.min.css">
+    <title>Dati Utente</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: #eee;
+            padding: 20px;
+        }
+        .box {
+            background: white;
+            padding: 15px;
+            max-width: 500px;
+            margin: auto;
+            border-radius: 5px;
+        }
+        input, select, button, textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            margin-bottom: 10px;
+        }
+        button {
+            background: green;
+            color: white;
+            border: none;
+        }
+        .inline {
+            width: auto;
+            margin-right: 10px;
+        }
+    </style>
 </head>
 <body>
-    <h2>Modulo Anagrafica</h2>
 
-    <form>
-        <!-- Dati personali -->
-        <label for="nome">Nome:</label>
-        <input type="text" id="nome" name="nome"><br><br>
+<div class="box">
+    <h2>Inserisci i tuoi dati</h2>
 
-        <label for="cognome">Cognome:</label>
-        <input type="text" id="cognome" name="cognome"><br><br>
+    <form name="formUtente">
+        <label>Nome:</label>
+        <input type="text" name="nome" required>
 
-        <label for="eta">Età:</label>
-        <input type="number" id="eta" name="eta" min="0"><br><br>
+        <label>Cognome:</label>
+        <input type="text" name="cognome" required>
 
-        <!-- Sesso (RadioButton) -->
-        <fieldset>
-            <legend>Sesso:</legend>
-            <input type="radio" id="m" name="sesso" value="M">
-            <label for="m">Maschio</label><br>
+        <label>Indirizzo:</label>
+        <input type="text" name="indirizzo" required>
 
-            <input type="radio" id="f" name="sesso" value="F">
-            <label for="f">Femmina</label><br>
+        <label>Città:</label>
+        <input type="text" name="citta" required>
 
-            <input type="radio" id="altro" name="sesso" value="Altro">
-            <label for="altro">Altro</label>
-        </fieldset><br>
-
-        <!-- Provincia (ComboBox) -->
-        <label for="provincia">Provincia:</label>
-        <select id="provincia" name="provincia">
+        <label>Provincia:</label>
+        <select name="provincia" required>
             <option value="">-- Seleziona --</option>
-            <option value="MI">Milano</option>
             <option value="RM">Roma</option>
-            <option value="TO">Torino</option>
+            <option value="MI">Milano</option>
             <option value="NA">Napoli</option>
+            <option value="TO">Torino</option>
             <option value="FI">Firenze</option>
-        </select><br><br>
+        </select>
 
-        <!-- Mezzi di locomozione (Checkbox) -->
-        <fieldset>
-            <legend>Mezzi di locomozione posseduti in famiglia:</legend>
-            <input type="checkbox" id="auto" name="mezzi" value="auto">
-            <label for="auto">Auto</label><br>
+        <label>CAP:</label>
+        <input type="text" name="cap" required>
 
-            <input type="checkbox" id="moto" name="mezzi" value="moto">
-            <label for="moto">Moto</label><br>
+        <label>Età:</label>
+        <input type="number" name="eta" required min="0" max="120">
 
-            <input type="checkbox" id="bici" name="mezzi" value="bici">
-            <label for="bici">Bici</label><br>
+        <label>Sesso:</label><br>
+        <input type="radio" name="sesso" value="Maschio" class="inline" required> M
+        <input type="radio" name="sesso" value="Femmina" class="inline"> F
+        <input type="radio" name="sesso" value="Altro" class="inline"> Altro
+        <br><br>
 
-            <input type="checkbox" id="aereo" name="mezzi" value="aereo">
-            <label for="aereo">Aereo</label><br>
+        <label>Mezzi di locomozione posseduti in famiglia:</label><br>
+        <input type="checkbox" name="mezzi" value="Auto" class="inline"> Auto
+        <input type="checkbox" name="mezzi" value="Moto" class="inline"> Moto
+        <input type="checkbox" name="mezzi" value="Bici" class="inline"> Bici
+        <input type="checkbox" name="mezzi" value="Aereo" class="inline"> Aereo
+        <input type="checkbox" name="mezzi" value="Yacht" class="inline"> Yacht
+        <br><br>
 
-            <input type="checkbox" id="yacht" name="mezzi" value="yacht">
-            <label for="yacht">Yacht</label>
-        </fieldset><br>
+        <label>Materie di insegnamento preferite (max 3):</label>
+        <select name="materie" multiple size="5">
+            <option value="Matematica">Matematica</option>
+            <option value="Italiano">Italiano</option>
+            <option value="Inglese">Inglese</option>
+            <option value="Storia">Storia</option>
+            <option value="Geografia">Geografia</option>
+            <option value="Scienze">Scienze</option>
+            <option value="Arte">Arte</option>
+            <option value="Educazione Fisica">Educazione Fisica</option>
+            <option value="Musica">Musica</option>
+        </select>
 
-        <!-- Materie preferite (ListBox, max 3) -->
-        <label for="materie">Materie di insegnamento preferite (max 3):</label><br>
-        <select id="materie" name="materie" multiple size="9">
-            <option>Matematica</option>
-            <option>Italiano</option>
-            <option>Inglese</option>
-            <option>Storia</option>
-            <option>Geografia</option>
-            <option>Fisica</option>
-            <option>Chimica</option>
-            <option>Informatica</option>
-            <option>Arte</option>
-        </select><br><br>
-
-        <input type="submit" value="Invia">
-        <input type="reset" value="Reset">
+        <button type="button" onclick="calcola()">Scopri Generazione</button>
     </form>
-    <script src=anag2.js"><script/>
+</div>
+
+<script>
+function calcola() {
+    let nome = document.formUtente.nome.value;
+    let cognome = document.formUtente.cognome.value;
+    let indirizzo = document.formUtente.indirizzo.value;
+    let citta = document.formUtente.citta.value;
+    let provincia = document.formUtente.provincia.value;
+    let cap = document.formUtente.cap.value;
+    let eta = document.formUtente.eta.value;
+
+    // Sesso
+    let sesso = document.querySelector('input[name="sesso"]:checked');
+    sesso = sesso ? sesso.value : "Non specificato";
+
+    // Mezzi di locomozione
+    let mezzi = Array.from(document.querySelectorAll('input[name="mezzi"]:checked'))
+                    .map(x => x.value)
+                    .join(", ");
+    if (!mezzi) mezzi = "Nessuno";
+
+    // Materie preferite (max 3)
+    let materie = Array.from(document.formUtente.materie.selectedOptions)
+                    .map(x => x.value);
+    if (materie.length > 3) {
+        alert("Puoi selezionare al massimo 3 materie!");
+        return;
+    }
+
+    if (eta == "" || eta < 0) {
+        alert("Inserisci un'età valida!");
+        return;
+    }
+
+    let anno = 2025 - eta;
+    let gen = "";
+
+    if (anno >= 2013) gen = "Generazione Alpha (2013 - oggi)";
+    else if (anno >= 1997) gen = "Generazione Z (1997 - 2012)";
+    else if (anno >= 1981) gen = "Millennials (1981 - 1996)";
+    else if (anno >= 1965) gen = "Generazione X (1965 - 1980)";
+    else if (anno >= 1946) gen = "Baby Boomers (1946 - 1964)";
+    else if (anno >= 1928) gen = "Generazione Silenziosa (1928 - 1945)";
+    else gen = "Greatest Generation (1901 - 1927)";
+
+    alert(
+        "Ciao " + nome + " " + cognome + "!\n" +
+        "Sesso: " + sesso + "\n" +
+        "Abiti in " + indirizzo + ", " + citta + " (" + provincia + ") - " + cap + ".\n" +
+        "Hai " + eta + " anni e appartieni a: " + gen + ".\n" +
+        "Mezzi posseduti: " + mezzi + ".\n" +
+        "Materie preferite: " + (materie.length ? materie.join(", ") : "Nessuna")
+    );
+}
+</script>
+
 </body>
 </html>
-
