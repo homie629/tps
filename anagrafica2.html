@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anagrafica</title>
+    <link rel="stylesheet" href="https://star08-web.pages.dev/css/pico/pico.min.css">
+</head>
+<body>
+    <h2>Modulo Anagrafica</h2>
+
+    <form>
+        <!-- Dati personali -->
+        <label for="nome">Nome:</label>
+        <input type="text" id="nome" name="nome"><br><br>
+
+        <label for="cognome">Cognome:</label>
+        <input type="text" id="cognome" name="cognome"><br><br>
+
+        <label for="eta">Età:</label>
+        <input type="number" id="eta" name="eta" min="0"><br><br>
+
+        <!-- Sesso (RadioButton) -->
+        <fieldset>
+            <legend>Sesso:</legend>
+            <input type="radio" id="m" name="sesso" value="M">
+            <label for="m">Maschio</label><br>
+
+            <input type="radio" id="f" name="sesso" value="F">
+            <label for="f">Femmina</label><br>
+
+            <input type="radio" id="altro" name="sesso" value="Altro">
+            <label for="altro">Altro</label>
+        </fieldset><br>
+
+        <!-- Provincia (ComboBox) -->
+        <label for="provincia">Provincia:</label>
+        <select id="provincia" name="provincia">
+            <option value="">-- Seleziona --</option>
+            <option value="MI">Milano</option>
+            <option value="RM">Roma</option>
+            <option value="TO">Torino</option>
+            <option value="NA">Napoli</option>
+            <option value="FI">Firenze</option>
+        </select><br><br>
+
+        <!-- Mezzi di locomozione (Checkbox) -->
+        <fieldset>
+            <legend>Mezzi di locomozione posseduti in famiglia:</legend>
+            <input type="checkbox" id="auto" name="mezzi" value="auto">
+            <label for="auto">Auto</label><br>
+
+            <input type="checkbox" id="moto" name="mezzi" value="moto">
+            <label for="moto">Moto</label><br>
+
+            <input type="checkbox" id="bici" name="mezzi" value="bici">
+            <label for="bici">Bici</label><br>
+
+            <input type="checkbox" id="aereo" name="mezzi" value="aereo">
+            <label for="aereo">Aereo</label><br>
+
+            <input type="checkbox" id="yacht" name="mezzi" value="yacht">
+            <label for="yacht">Yacht</label>
+        </fieldset><br>
+
+        <!-- Materie preferite (ListBox, max 3) -->
+        <label for="materie">Materie di insegnamento preferite (max 3):</label><br>
+        <select id="materie" name="materie" multiple size="9">
+            <option>Matematica</option>
+            <option>Italiano</option>
+            <option>Inglese</option>
+            <option>Storia</option>
+            <option>Geografia</option>
+            <option>Fisica</option>
+            <option>Chimica</option>
+            <option>Informatica</option>
+            <option>Arte</option>
+        </select><br><br>
+
+        <input type="submit" value="Invia">
+        <input type="reset" value="Reset">
+    </form>
+    <script src=anag2.js"><script/>
+</body>
+</html>
+
