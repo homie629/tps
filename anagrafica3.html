@@ -1,1 +1,145 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Dati Utente</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: #eee;
+            padding: 20px;
+        }
+        .box {
+            background: white;
+            padding: 15px;
+            max-width: 500px;
+            margin: auto;
+            border-radius: 5px;
+        }
+        input, select, button {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            margin-bottom: 10px;
+        }
+        button {
+            background: green;
+            color: white;
+            border: none;
+        }
+        .inline {
+            width: auto;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
 
+<div class="box">
+    <h2>Inserisci i tuoi dati</h2>
+
+    <form name="formUtente">
+        <label>Nome:</label>
+        <input type="text" name="nome" required>
+
+        <label>Cognome:</label>
+        <input type="text" name="cognome" required>
+
+        <label>Indirizzo:</label>
+        <input type="text" name="indirizzo" required>
+
+        <label>Città:</label>
+        <input type="text" name="citta" required>
+
+        <label>Provincia:</label>
+        <select name="provincia" required>
+            <option value="">-- Seleziona --</option>
+            <option value="RM">Roma</option>
+            <option value="MI">Milano</option>
+            <option value="NA">Napoli</option>
+            <option value="TO">Torino</option>
+            <option value="FI">Firenze</option>
+        </select>
+
+        <label>CAP:</label>
+        <input type="text" name="cap" required>
+
+        <label>Età:</label>
+        <input type="number" name="eta" required min="0" max="120">
+
+        <label>Sesso:</label><br>
+        <input type="radio" name="sesso" value="Maschio" class="inline" required> M
+        <input type="radio" name="sesso" value="Femmina" class="inline"> F
+        <input type="radio" name="sesso" value="Altro" class="inline"> Altro
+        <br><br>
+
+        <label>Mezzi posseduti:</label><br>
+        <input type="checkbox" name="mezzi" value="Auto" class="inline"> Auto
+        <input type="checkbox" name="mezzi" value="Moto" class="inline"> Moto
+        <input type="checkbox" name="mezzi" value="Bici" class="inline"> Bici
+        <input type="checkbox" name="mezzi" value="Aereo" class="inline"> Aereo
+        <input type="checkbox" name="mezzi" value="Yacht" class="inline"> Yacht
+        <br><br>
+
+        <label>Materie preferite (max 3):</label>
+        <select name="materie" multiple size="5">
+            <option value="Matematica">Matematica</option>
+            <option value="Italiano">Italiano</option>
+            <option value="Inglese">Inglese</option>
+            <option value="Storia">Storia</option>
+            <option value="Geografia">Geografia</option>
+            <option value="Scienze">Scienze</option>
+            <option value="Arte">Arte</option>
+            <option value="Educazione Fisica">Educazione Fisica</option>
+            <option value="Musica">Musica</option>
+        </select>
+
+        <button type="button" onclick="calcola()">Scopri Generazione</button>
+    </form>
+</div>
+
+<script>
+function calcola() {
+
+    let persona = {
+        nome: formUtente.nome.value,
+        cognome: formUtente.cognome.value,
+        indirizzo: formUtente.indirizzo.value,
+        citta: formUtente.citta.value,
+        provincia: formUtente.provincia.value,
+        cap: formUtente.cap.value,
+        eta: formUtente.eta.value,
+        sesso: document.querySelector('input[name="sesso"]:checked') ? document.querySelector('input[name="sesso"]:checked').value : "",
+        mezzi: Array.from(document.querySelectorAll('input[name="mezzi"]:checked')).map(x => x.value),
+        materie: Array.from(formUtente.materie.selectedOptions).map(x => x.value)
+    };
+
+    if (persona.materie.length > 3) {
+        alert("Puoi selezionare al massimo 3 materie!");
+        return;
+    }
+
+    let anno = 2025 - persona.eta;
+    let gen = "";
+
+    if (anno >= 2013) gen = "Generazione Alpha (2013 - oggi)";
+    else if (anno >= 1997) gen = "Generazione Z (1997 - 2012)";
+    else if (anno >= 1981) gen = "Millennials (1981 - 1996)";
+    else if (anno >= 1965) gen = "Generazione X (1965 - 1980)";
+    else if (anno >= 1946) gen = "Baby Boomers (1946 - 1964)";
+    else if (anno >= 1928) gen = "Generazione Silenziosa (1928 - 1945)";
+    else gen = "Greatest Generation (1901 - 1927)";
+
+    alert(
+        "Ciao " + persona.nome + " " + persona.cognome + "!\n" +
+        "Sesso: " + persona.sesso + "\n" +
+        "Abiti in " + persona.indirizzo + ", " + persona.citta + " (" + persona.provincia + ") - " + persona.cap + ".\n" +
+        "Hai " + persona.eta + " anni e appartieni a: " + gen + ".\n" +
+        "Mezzi: " + (persona.mezzi.length ? persona.mezzi.join(", ") : "Nessuno") + "\n" +
+        "Materie preferite: " + (persona.materie.length ? persona.materie.join(", ") : "Nessuna")
+    );
+}
+</script>
+
+</body>
+</html>
