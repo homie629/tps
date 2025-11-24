@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Anagrafica e Generazione</title>
+</head>
+<body>
+
+<h2>Inserisci i tuoi dati</h2>
+
+<label>Nome: <input type="text" id="nome"></label><br><br>
+<label>Cognome: <input type="text" id="cognome"></label><br><br>
+<label>Indirizzo: <input type="text" id="indirizzo"></label><br><br>
+<label>Città: <input type="text" id="citta"></label><br><br>
+<label>CAP: <input type="text" id="cap"></label><br><br>
+<label>Data di nascita: <input type="date" id="nascita"></label><br><br>
+
+<button onclick="calcola()">Invia</button>
+
+<h3>Risultato:</h3>
+<pre id="output"></pre>
+
+<script>
+function calcola() {
+    const nome = document.getElementById("nome").value;
+    const cognome = document.getElementById("cognome").value;
+    const indirizzo = document.getElementById("indirizzo").value;
+    const citta = document.getElementById("citta").value;
+    const cap = document.getElementById("cap").value;
+    const nascita = document.getElementById("nascita").value;
+
+    if (!nascita) {
+        alert("Inserisci la data di nascita!");
+        return;
+    }
+
+    const anno = new Date(nascita).getFullYear();
+    const oggi = new Date().getFullYear();
+    const eta = oggi - anno;
+
+    // Determinazione generazione
+    let generazione = "";
+
+    if (anno >= 2013) generazione = "Generazione Alpha";
+    else if (anno >= 1997) generazione = "Generazione Z";
+    else if (anno >= 1981) generazione = "Millennials";
+    else if (anno >= 1965) generazione = "Generazione X";
+    else if (anno >= 1946) generazione = "Baby Boomers";
+    else if (anno >= 1928) generazione = "Generazione Silenziosa";
+    else if (anno >= 1901) generazione = "Greatest Generation";
+    else generazione = "Prima del 1901 (fuori scala)";
+
+    const risultato = `
+Nome: ${nome}
+Cognome: ${cognome}
+Indirizzo: ${indirizzo}
+Città: ${citta}
+CAP: ${cap}
+Età: ${eta}
+Generazione: ${generazione}
+`;
+
+    document.getElementById("output").textContent = risultato;
+}
+</script>
+
+</body>
+</html>
