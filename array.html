@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Array di Numeri Casuali</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        table {
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        td, th {
+            border: 1px solid #ccc;
+            padding: 6px 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+        .highlight {
+            background-color: #ffeb3b;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Elaborazione di un Array di Numeri Casuali</h1>
+
+    <div id="output"></div>
+
+    <script>
+        // 1️⃣ Crea un array di 100 numeri casuali tra -100 e 100
+        const numeri = [];
+        for (let i = 0; i < 100; i++) {
+            numeri.push(Math.floor(Math.random() * 201) - 100); // da -100 a 100
+        }
+
+        // 2️⃣ Calcola la media
+        const media = numeri.reduce((a, b) => a + b, 0) / numeri.length;
+
+        // 3️⃣ Trova massimo e minimo
+        const max = Math.max(...numeri);
+        const min = Math.min(...numeri);
+
+        // 4️⃣ Crea un nuovo array con numeri > 50
+        const maggiori50 = numeri.filter(num => num > 50);
+
+        // 5️⃣ Mostra tutto in una griglia (tabella)
+        let html = `<p><strong>Media:</strong> ${media.toFixed(2)}<br>
+                    <strong>Massimo:</strong> ${max}<br>
+                    <strong>Minimo:</strong> ${min}<br>
+                    <strong>Numeri > 50:</strong> ${maggiori50.join(", ")}</p>`;
+
+        html += "<table><tr><th>Indice</th><th>Valore</th></tr>";
+
+        numeri.forEach((num, i) => {
+            const evidenzia = num > 50 ? "class='highlight'" : "";
+            html += `<tr ${evidenzia}><td>${i}</td><td>${num}</td></tr>`;
+        });
+
+        html += "</table>";
+
+        document.getElementById("output").innerHTML = html;
+    </script>
+
+</body>
+</html>
