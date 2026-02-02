@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Validazione Form JavaScript</title>
+
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f6f8;
+        }
+
+        .container {
+            width: 350px;
+            margin: 60px auto;
+            background: #ffffff;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        label {
+            font-weight: bold;
+            color: #555;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        input[type="submit"] {
+            width: 100%;
+            background: #4CAF50;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background: #45a049;
+        }
+    </style>
+
+    <script>
+        function validaForm() {
+
+            let nome = document.mioForm.nome.value;
+            let cognome = document.mioForm.cognome.value;
+            let email = document.mioForm.email.value;
+            let telefono = document.mioForm.telefono.value;
+            let username = document.mioForm.username.value;
+            let password = document.mioForm.password.value;
+
+            if (nome === "") {
+                alert("Inserisci il nome");
+                return false;
+            }
+
+            if (cognome === "") {
+                alert("Inserisci il cognome");
+                return false;
+            }
+
+            let emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailPattern.test(email)) {
+                alert("Inserisci un'email valida");
+                return false;
+            }
+
+            let telefonoPattern = /^[0-9]{8,}$/;
+            if (!telefonoPattern.test(telefono)) {
+                alert("Inserisci un numero di telefono valido");
+                return false;
+            }
+
+            if (username.length < 4) {
+                alert("Lo username deve contenere almeno 4 caratteri");
+                return false;
+            }
+
+            if (password.length < 8) {
+                alert("La password deve contenere almeno 8 caratteri");
+                return false;
+            }
+
+            if (!/^[A-Z]/.test(password)) {
+                alert("La password deve iniziare con una lettera maiuscola");
+                return false;
+            }
+
+            if (!/[@#?$-_]/.test(password)) {
+                alert("La password deve contenere almeno un carattere speciale (@, #, ?, $, -, _)");
+                return false;
+            }
+
+            alert("Form inviato correttamente!");
+            return true;
+        }
+    </script>
+
+</head>
+<body>
+
+<div class="container">
+    <h2>Registrazione</h2>
+
+    <form name="mioForm" onsubmit="return validaForm()">
+
+        <label>Nome</label>
+        <input type="text" name="nome">
+
+        <label>Cognome</label>
+        <input type="text" name="cognome">
+
+        <label>Email</label>
+        <input type="text" name="email">
+
+        <label>Telefono</label>
+        <input type="text" name="telefono">
+
+        <label>Username</label>
+        <input type="text" name="username">
+
+        <label>Password</label>
+        <input type="password" name="password">
+
+        <input type="submit" value="Invia">
+    </form>
+</div>
+
+</body>
+</html>
