@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<title>Stella dentro un Cerchio</title>
+
+<style>
+    body {
+        background-color: #f0f0f0;
+        text-align: center;
+        font-family: Arial, sans-serif;
+    }
+
+    canvas {
+        background-color: white;
+        border: 2px solid #333;
+        margin-top: 20px;
+    }
+</style>
+</head>
+
+<body>
+
+<h2>Stella a 5 punte dentro un Cerchio</h2>
+
+<canvas id="mioCanvas" width="400" height="400"></canvas>
+
+<script>
+    let canvas = document.getElementById("mioCanvas");
+    let ctx = canvas.getContext("2d");
+
+    let centroX = 200;
+    let centroY = 200;
+    let raggioCerchio = 150;
+
+    // === DISEGNO CERCHIO ===
+    ctx.beginPath();
+    ctx.arc(centroX, centroY, raggioCerchio, 0, 2 * Math.PI);
+    ctx.fillStyle = "#87CEFA";   // colore interno
+    ctx.fill();
+    ctx.lineWidth = 4;
+    ctx.strokeStyle = "#003366"; // colore bordo
+    ctx.stroke();
+
+    // === DISEGNO STELLA A 5 PUNTE ===
+    function disegnaStella(cx, cy, punte, raggioEsterno, raggioInterno) {
+        let angolo = Math.PI / punte;
+
+        ctx.beginPath();
+        for (let i = 0; i < 2 * punte; i++) {
+            let r = (i % 2 === 0) ? raggioEsterno : raggioInterno;
+            let x = cx + Math.cos(i * angolo - Math.PI / 2) * r;
+            let y = cy + Math.sin(i * angolo - Math.PI / 2) * r;
+            ctx.lineTo(x, y);
+        }
+        ctx.closePath();
+
+        ctx.fillStyle = "yellow";   // colore interno stella
+        ctx.fill();
+        ctx.lineWidth = 3;
+        ctx.strokeStyle = "orange"; // colore contorno
+        ctx.stroke();
+    }
+
+    // Stella centrata nel cerchio
+    disegnaStella(centroX, centroY, 5, 100, 40);
+
+</script>
+
+</body>
+</html>
