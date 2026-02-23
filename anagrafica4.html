@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validazione Anagrafica</title>
+    <style>
+        body { font-family: sans-serif; background-color: #f4f4f9; display: flex; justify-content: center; padding: 20px; }
+        form { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); width: 100%; max-width: 400px; }
+        div { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        input:invalid { border-color: #ff4d4d; }
+        input:valid { border-color: #2ecc71; }
+        button { width: 100%; padding: 10px; background: #3498db; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        button:hover { background: #2980b9; }
+        .hint { font-size: 0.8em; color: #666; margin-top: 3px; }
+    </style>
+</head>
+<body>
+
+<form id="anagraficaForm">
+    <h2>Registrazione</h2>
+    
+    <div>
+        <label for="nome">Nome e Cognome</label>
+        <input type="text" id="nome" name="nome" required 
+               pattern="[a-zA-ZÀ-ÿ\s']+" 
+               title="Solo lettere e spazi ammessi">
+        <div class="hint">Solo lettere (es. Mario Rossi)</div>
+    </div>
+
+    <div>
+        <label for="cap">CAP</label>
+        <input type="text" id="cap" name="cap" required 
+               pattern="\d{5}" 
+               maxlength="5"
+               title="Inserire esattamente 5 cifre numeriche">
+        <div class="hint">5 cifre (es. 00100)</div>
+    </div>
+
+    <div>
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" required 
+               pattern=".{3,16}" 
+               title="Minimo 3, massimo 16 caratteri">
+        <div class="hint">Da 3 a 16 caratteri</div>
+    </div>
+
+    <div>
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required>
+        <div class="hint">Inserisci un indirizzo valido</div>
+    </div>
+
+    <button type="submit">Invia Dati</button>
+</form>
+
+<script>
+    document.getElementById('anagraficaForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        alert('Dati validi! Pronto per l\'invio al database.');
+    });
+</script>
+
+</body>
+</html>
+
