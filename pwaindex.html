@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cat vs Dog Recognition</title>
+
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="style.css">
+  <meta name="theme-color" content="#4CAF50"/>
+
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet@latest"></script>
+</head>
+<body>
+
+  <h1>Riconoscimento Gatto vs Cane</h1>
+
+  <input type="file" accept="image/*" capture="environment" id="imageUpload"/>
+
+  <img id="preview" width="300"/>
+
+  <button onclick="classifyImage()">Classifica</button>
+
+  <p id="result"></p>
+
+  <script src="app.js"></script>
+
+</body>
+</html>
