@@ -33,3 +33,6 @@ async function classifyImage() {
       "Non riconosciuto come gatto o cane.";
   }
 }
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('service-worker.js');
+}
