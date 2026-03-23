@@ -88,11 +88,7 @@
     <input type="text" id="username" name="username">
     <span id="usernameError" style="color: red; font-size: 0.9rem;"></span>
 
-    <button type="button" style="background: #27ae60; margin-top: 10px;" onclick="stampa()">Aggiungi Persona alla
-      Lista</button>
-    <button type="button"
-      style="background: #27ae60; margin-top: 10px; width: 100%; padding: 12px; color: white; font-size: 1rem; border: none; border-radius: 8px; cursor: pointer;"
-      onclick="trasmettiTutto()">Trasmetti Dati alla Tabella</button>
+    <button type="button" style="background: #27ae60; margin-top: 10px;" onclick="stampa()">Invia dati</button>
   </form>
 
   <div id="output">
@@ -258,47 +254,6 @@ function stampa() {
         "<p><strong>Username:</strong> " + (persona.username || "Non specificato") + "</p>" +
         "<hr><p><em>Persona aggiunta alla lista! Totale persone: " + (persone.length + 1) + "</em></p>";
     persone.push(persona);
-}
-
-function trasmettiTutto() {
-    if (persone.length === 0) {
-        alert("Aggiungi almeno una persona alla lista prima di trasmettere!");
-        return;
-    }
-    
-    var passwordInserita = prompt("Inserisci la password per trasmettere i dati:");
-
-    if (passwordInserita === null) {
-        return;
-    }
-
-    if (passwordInserita !== "Ciaofratell@100") {
-        document.getElementById("output").innerHTML = 
-            "<h2>Errore</h2>" +
-            "<p style='color: red; font-size: 1.2rem; text-align: center;'><strong>password sbagliata</strong></p>";
-        return;
-    }
-    
-    var url = "destinatarioCreaTabella.html?txtR=" + persone.length + "&txtC=13&";
-
-    for (var i = 0; i < persone.length; i++) {
-        var p = persone[i];
-        url += "id=" + encodeURIComponent(p.id) + "&";
-        url += "nome=" + encodeURIComponent(p.nome) + "&";
-        url += "cognome=" + encodeURIComponent(p.cognome) + "&";
-        url += "indirizzo=" + encodeURIComponent(p.indirizzo.via) + "&";
-        url += "citta=" + encodeURIComponent(p.indirizzo.citta) + "&";
-        url += "cap=" + encodeURIComponent(p.indirizzo.cap) + "&";
-        url += "eta=" + encodeURIComponent(p.eta) + "&";
-        url += "dataNascita=" + encodeURIComponent(p.dataNascita) + "&";
-        url += "sesso=" + encodeURIComponent(p.sesso) + "&";
-        url += "provincia=" + encodeURIComponent(p.provincia) + "&";
-        url += "mezzi=" + encodeURIComponent(p.mezziPosseduti) + "&";
-        url += "materie=" + encodeURIComponent(p.materiePreferite) + "&";
-        url += "username=" + encodeURIComponent(p.username) + "&";
-    }
-
-    window.location.href = url;
 }
 </script>
 </body>
