@@ -174,8 +174,7 @@
     </style>
 </head>
 <body>
-  <form>
-    <input type="hidden" name="id" id="inputId">
+  <form id="anagraficaForm">
     <h1>Anagrafica Generazionale</h1>
 
     <div class="grid-row">
@@ -282,10 +281,9 @@
 <script>
     let persone = [];
 
-    const regexNomeCognome = /^[a-zA-Z\s]+$/; 
+    const regexNomeCognome = /^[a-zA-Z\s]+$/;
     const regexCAP = /^[0-9]+$/;
     const regexUsername = /^.{3,16}$/;
-    const regexPassword = /^(?=.*[!@#$%^&*(),.?":{}|<>]).{12,}$/;
 
     function validaCampi() {
         const nome = document.getElementById("nome").value;
@@ -324,8 +322,6 @@
             return;
         }
         
-        id = id + 1;
-        document.getElementById("inputId").value = id;
         const nome = document.getElementById("nome").value;
         const cognome = document.getElementById("cognome").value;
         const indirizzo = document.getElementById("indirizzo").value;
