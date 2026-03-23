@@ -5,16 +5,172 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Validazione Anagrafica</title>
     <style>
-        body { font-family: sans-serif; background-color: #f4f4f9; display: flex; justify-content: center; padding: 20px; }
-        form { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); width: 100%; max-width: 400px; }
-        div { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; }
-        input { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-        input:invalid { border-color: #ff4d4d; }
-        input:valid { border-color: #2ecc71; }
-        button { width: 100%; padding: 10px; background: #3498db; color: white; border: none; border-radius: 4px; cursor: pointer; }
-        button:hover { background: #2980b9; }
-        .hint { font-size: 0.8em; color: #666; margin-top: 3px; }
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --bg-body: #f8fafc;
+            --bg-card: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --success: #22c55e;
+            --error: #ef4444;
+        }
+
+        body { 
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+            background-color: var(--bg-body); 
+            color: var(--text-main);
+            display: flex; 
+            flex-direction: column;
+            align-items: center; 
+            padding: 40px 20px;
+            margin: 0;
+        }
+
+        form { 
+            background: var(--bg-card); 
+            padding: 32px; 
+            border-radius: 16px; 
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); 
+            width: 100%; 
+            max-width: 550px; 
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 24px;
+            color: var(--text-main);
+            text-align: center;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 12px;
+        }
+
+        .grid-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .form-group { margin-bottom: 18px; }
+
+        label { 
+            display: block; 
+            margin-bottom: 6px; 
+            font-size: 0.875rem;
+            font-weight: 600; 
+            color: var(--text-main);
+        }
+
+        input[type="text"], 
+        input[type="number"], 
+        input[type="date"], 
+        select { 
+            width: 100%; 
+            padding: 10px 12px; 
+            border: 1.5px solid var(--border); 
+            border-radius: 8px; 
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            outline: none;
+            background: #fff;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        input:invalid:not(:placeholder-shown) { border-color: var(--error); }
+        
+        .radio-group, .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            padding: 8px 0;
+        }
+
+        .radio-group label, .checkbox-group label {
+            display: flex;
+            align-items: center;
+            font-weight: 400;
+            cursor: pointer;
+            background: #f1f5f9;
+            padding: 6px 12px;
+            border-radius: 20px;
+            transition: background 0.2s;
+        }
+
+        .radio-group label:hover, .checkbox-group label:hover {
+            background: #e2e8f0;
+        }
+
+        .radio-group input, .checkbox-group input {
+            margin-right: 8px;
+            width: auto;
+        }
+
+        select[multiple] {
+            height: 120px;
+        }
+
+        button { 
+            width: 100%; 
+            padding: 12px; 
+            background: var(--primary); 
+            color: white; 
+            border: none; 
+            border-radius: 8px; 
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer; 
+            transition: background 0.2s;
+            margin-top: 20px;
+        }
+
+        button:hover { background: var(--primary-hover); }
+
+        #usernameError {
+            display: block;
+            margin-top: 4px;
+            font-weight: 500;
+        }
+
+        /* Area Output */
+        #output {
+            width: 100%;
+            max-width: 550px;
+            background: #fff;
+            padding: 24px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        #output h2 {
+            font-size: 1.25rem;
+            margin-top: 0;
+            color: var(--primary);
+            margin-bottom: 16px;
+        }
+
+        #output p {
+            margin: 8px 0;
+            padding-bottom: 8px;
+            border-bottom: 1px dashed #f1f5f9;
+            font-size: 0.95rem;
+        }
+
+        #output p strong {
+            color: var(--text-muted);
+            width: 140px;
+            display: inline-block;
+        }
+
+        @media (max-width: 480px) {
+            .grid-row { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
@@ -22,240 +178,239 @@
     <input type="hidden" name="id" id="inputId">
     <h1>Anagrafica Generazionale</h1>
 
-    <label for="nome">Nome</label>
-    <input type="text" id="nome" name="nome" required>
-
-    <label for="cognome">Cognome</label>
-    <input type="text" id="cognome" name="cognome" required>
-
-    <label for="indirizzo">Indirizzo</label>
-    <input type="text" id="indirizzo" name="indirizzo">
-
-    <label for="citta">Città</label>
-    <input type="text" id="citta" name="citta">
-
-    <label for="cap">CAP</label>
-    <input type="text" id="cap" name="cap">
-
-    <label for="eta">Età</label>
-    <input type="number" id="eta" name="eta" placeholder="Età attuale">
-
-    <label for="dataNascita">Data di nascita</label>
-    <input type="date" id="dataNascita" name="dataNascita">
-
-    <label>Sesso</label>
-    <div class="radio-group">
-      <label><input type="radio" name="sesso" value="M"> M</label>
-      <label><input type="radio" name="sesso" value="F"> F</label>
-      <label><input type="radio" name="sesso" value="Altro"> Altro</label>
+    <div class="grid-row">
+        <div class="form-group">
+            <label for="nome">Nome</label>
+            <input type="text" id="nome" name="nome" required placeholder="Es. Mario">
+        </div>
+        <div class="form-group">
+            <label for="cognome">Cognome</label>
+            <input type="text" id="cognome" name="cognome" required placeholder="Es. Rossi">
+        </div>
     </div>
 
-    <label for="provincia">Provincia</label>
-    <select id="provincia" name="provincia">
-      <option value="">-- Seleziona la provincia --</option>
-      <option>RM - Roma</option>
-      <option>MI - Milano</option>
-      <option>NA - Napoli</option>
-      <option>TO - Torino</option>
-      <option>FI - Firenze</option>
-      <option>VE - Venezia</option>
-      <option>BA - Bari</option>
-    </select>
-
-    <label>Mezzi di locomozione posseduti in famiglia</label>
-    <div class="checkbox-group">
-      <label><input type="checkbox" name="mezzi" value="Auto"> Auto</label>
-      <label><input type="checkbox" name="mezzi" value="Moto"> Moto</label>
-      <label><input type="checkbox" name="mezzi" value="Bici"> Bici</label>
-      <label><input type="checkbox" name="mezzi" value="Aereo"> Aereo</label>
-      <label><input type="checkbox" name="mezzi" value="Yacht"> Yacht</label>
+    <div class="form-group">
+        <label for="indirizzo">Indirizzo</label>
+        <input type="text" id="indirizzo" name="indirizzo" placeholder="Via/Piazza e n. civico">
     </div>
 
-    <label for="materie">Materie di insegnamento preferite (max 3)</label>
-    <select id="materie" name="materie" multiple>
-      <option>Matematica</option>
-      <option>Italiano</option>
-      <option>Inglese</option>
-      <option>Scienze</option>
-      <option>Storia</option>
-      <option>Geografia</option>
-      <option>Arte</option>
-      <option>Educazione fisica</option>
-      <option>Musica</option>
-    </select>
+    <div class="grid-row" style="grid-template-columns: 2fr 1fr;">
+        <div class="form-group">
+            <label for="citta">Città</label>
+            <input type="text" id="citta" name="citta">
+        </div>
+        <div class="form-group">
+            <label for="cap">CAP</label>
+            <input type="text" id="cap" name="cap">
+        </div>
+    </div>
 
-    <label for="username">Username (3-16 caratteri, lettere, numeri e speciali)</label>
-    <input type="text" id="username" name="username">
-    <span id="usernameError" style="color: red; font-size: 0.9rem;"></span>
+    <div class="grid-row">
+        <div class="form-group">
+            <label for="eta">Età</label>
+            <input type="number" id="eta" name="eta" placeholder="Anni">
+        </div>
+        <div class="form-group">
+            <label for="dataNascita">Data di nascita</label>
+            <input type="date" id="dataNascita" name="dataNascita">
+        </div>
+    </div>
 
-    <button type="button" style="background: #27ae60; margin-top: 10px;" onclick="stampa()">Invia dati</button>
+    <div class="form-group">
+        <label>Sesso</label>
+        <div class="radio-group">
+          <label><input type="radio" name="sesso" value="M"> Maschio</label>
+          <label><input type="radio" name="sesso" value="F"> Femmina</label>
+          <label><input type="radio" name="sesso" value="Altro"> Altro</label>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="provincia">Provincia</label>
+        <select id="provincia" name="provincia">
+          <option value="">-- Seleziona la provincia --</option>
+          <option>RM - Roma</option>
+          <option>MI - Milano</option>
+          <option>NA - Napoli</option>
+          <option>TO - Torino</option>
+          <option>FI - Firenze</option>
+          <option>VE - Venezia</option>
+          <option>BA - Bari</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label>Mezzi di locomozione in famiglia</label>
+        <div class="checkbox-group">
+          <label><input type="checkbox" name="mezzi" value="Auto"> Auto</label>
+          <label><input type="checkbox" name="mezzi" value="Moto"> Moto</label>
+          <label><input type="checkbox" name="mezzi" value="Bici"> Bici</label>
+          <label><input type="checkbox" name="mezzi" value="Aereo"> Aereo</label>
+          <label><input type="checkbox" name="mezzi" value="Yacht"> Yacht</label>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="materie">Materie preferite (max 3)</label>
+        <select id="materie" name="materie" multiple>
+          <option>Matematica</option>
+          <option>Italiano</option>
+          <option>Inglese</option>
+          <option>Scienze</option>
+          <option>Storia</option>
+          <option>Geografia</option>
+          <option>Arte</option>
+          <option>Educazione fisica</option>
+          <option>Musica</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" placeholder="3-16 caratteri">
+        <span id="usernameError" style="color: var(--error); font-size: 0.8rem;"></span>
+    </div>
+
+    <button type="button" onclick="stampa()">Invia dati</button>
   </form>
 
   <div id="output">
     <h2>Dati Inseriti</h2>
-    <p>Compila il modulo e premi "Invia dati" per vedere il riepilogo qui.</p>
+    <p style="color: var(--text-muted); border: none;">Compila il modulo e premi "Invia dati" per vedere il riepilogo qui.</p>
   </div>
 
 <script>
+    // Logica originale mantenuta
     let persone = [];
-let id = 0;
+    let id = 0;
 
-const regexNomeCognome = /^[a-zA-Z]+$/;
-const regexCAP = /^[0-9]+$/;
-const regexUsername = /^.{3,16}$/;
-const regexPassword = /^(?=.*[!@#$%^&*(),.?":{}|<>]).{12,}$/;
-function validaCampi() {
-    const nome = document.getElementById("nome").value;
-    const cognome = document.getElementById("cognome").value;
-    const cap = document.getElementById("cap").value;
-    const username = document.getElementById("username").value;
-    
-    let valido = true;
-    if (!regexNomeCognome.test(nome)) {
-        alert("Il nome deve contenere solo lettere maiuscole e minuscole!");
-        valido = false;
-    }
-    
-    if (!regexNomeCognome.test(cognome)) {
-        alert("Il cognome deve contenere solo lettere maiuscole e minuscole!");
-        valido = false;
-    }
-   
-    if (cap && !regexCAP.test(cap)) {
-        alert("Il CAP deve contenere solo numeri!");
-        valido = false;
-    }
+    const regexNomeCognome = /^[a-zA-Z\s]+$/; // Aggiunto \s per permettere nomi composti
+    const regexCAP = /^[0-9]+$/;
+    const regexUsername = /^.{3,16}$/;
+    const regexPassword = /^(?=.*[!@#$%^&*(),.?":{}|<>]).{12,}$/;
 
-    if (username && !regexUsername.test(username)) {
-        document.getElementById("usernameError").textContent = "L'username deve essere tra 3 e 16 caratteri!";
-        valido = false;
-    } else {
-        document.getElementById("usernameError").textContent = "";
-    }
-    
-    return valido;
-}
-
-
-
-function stampa() {
-
-    if (!validaCampi()) {
-        return;
-    }
-    
-    id = id + 1;
-    document.getElementById("inputId").value = id;
-    const nome = document.getElementById("nome").value;
-    const cognome = document.getElementById("cognome").value;
-    const indirizzo = document.getElementById("indirizzo").value;
-    const citta = document.getElementById("citta").value;
-    const cap = document.getElementById("cap").value;
-    const eta = parseInt(document.getElementById("eta").value);
-    const dataNascita = document.getElementById("dataNascita").value;
-
-    var radios = document.getElementsByName("sesso");
-    var sesso = "Non specificato";
-    for (var i = 0; i < radios.length; i++) {
-        if (radios[i].checked) {
-            sesso = radios[i].value;
-            break;
+    function validaCampi() {
+        const nome = document.getElementById("nome").value;
+        const cognome = document.getElementById("cognome").value;
+        const cap = document.getElementById("cap").value;
+        const username = document.getElementById("username").value;
+        
+        let valido = true;
+        if (!regexNomeCognome.test(nome)) {
+            alert("Il nome deve contenere solo lettere!");
+            valido = false;
         }
-    }
-
-    const provincia = document.getElementById("provincia").value;
-
-    var checkbox = document.getElementsByName("mezzi");
-    var mezzi = [];
-    for (var i = 0; i < checkbox.length; i++) {
-        if (checkbox[i].checked) {
-            mezzi.push(checkbox[i].value);
+        
+        if (!regexNomeCognome.test(cognome)) {
+            alert("Il cognome deve contenere solo lettere!");
+            valido = false;
         }
-    }
-
-
-    let materie = [];
-    let selected = document.getElementById("materie").selectedOptions;
-
-    for (let i = 0; i < selected.length; i++) {
-        let opzione = selected[i];
-        materie.push(opzione.value);
-    }
-
-
-    let mezziPosseduti;
-    if (mezzi.length > 0) {
-        mezziPosseduti = mezzi.join(", ");
-    } else {
-        mezziPosseduti = "Nessuno";
-    }
-
-    let materiePreferite;
-    if (materie.length > 0) {
-        materiePreferite = materie.join(", ");
-    } else {
-        materiePreferite = "Nessuna";
-    }
-
-    let generazione = "";
-    switch (true) {
-        case eta <= 12:
-            generazione = "Generazione Alpha";
-            break;
-        case (eta >= 13 && eta <= 28):
-            generazione = "Generazione Z";
-            break;
-        case (eta >= 29 && eta <= 44):
-            generazione = "Millennials";
-            break;
-        case (eta >= 45 && eta <= 60):
-            generazione = "Generazione X";
-            break;
-        default:
-            generazione = "Boh!";
-    }
-
-    const username = document.getElementById("username").value;
-    
-    const persona = {
-        id: id,
-        nome: nome,
-        cognome: cognome,
-        eta: eta,
-        dataNascita: dataNascita,
-        sesso: sesso,
-        provincia: provincia,
-        generazione: generazione,
-        mezziPosseduti: mezziPosseduti,
-        materiePreferite: materiePreferite,
-        username: username,
-
-        indirizzo: {
-            via: indirizzo,
-            citta: citta,
-            cap: cap
+       
+        if (cap && !regexCAP.test(cap)) {
+            alert("Il CAP deve contenere solo numeri!");
+            valido = false;
         }
-    };
 
-    document.getElementById("output").innerHTML =
-        "<h2>Dati Inseriti</h2>" +
-        "<p><strong>Nome:</strong> " + persona.nome + "</p>" +
-        "<p><strong>Cognome:</strong> " + persona.cognome + "</p>" +
-        "<p><strong>Indirizzo:</strong> " + persona.indirizzo.via + "</p>" +
-        "<p><strong>Città:</strong> " + persona.indirizzo.citta + "</p>" +
-        "<p><strong>CAP:</strong> " + persona.indirizzo.cap + "</p>" +
-        "<p><strong>Età:</strong> " + (persona.eta || "Non specificata") + "</p>" +
-        "<p><strong>Data di nascita:</strong> " + (persona.dataNascita || "Non indicata") + "</p>" +
-        "<p><strong>Sesso:</strong> " + persona.sesso + "</p>" +
-        "<p><strong>Provincia:</strong> " + persona.provincia + "</p>" +
-        "<p><strong>Mezzi posseduti:</strong> " + persona.mezziPosseduti + "</p>" +
-        "<p><strong>Materie preferite:</strong> " + persona.materiePreferite + "</p>" +
-        "<p><strong>Generazione:</strong> " + persona.generazione + "</p>" +
-        "<p><strong>Username:</strong> " + (persona.username || "Non specificato") + "</p>" +
-        "<hr><p><em>Persona aggiunta alla lista! Totale persone: " + (persone.length + 1) + "</em></p>";
-    persone.push(persona);
-}
+        if (username && !regexUsername.test(username)) {
+            document.getElementById("usernameError").textContent = "L'username deve essere tra 3 e 16 caratteri!";
+            valido = false;
+        } else {
+            document.getElementById("usernameError").textContent = "";
+        }
+        
+        return valido;
+    }
+
+    function stampa() {
+        if (!validaCampi()) {
+            return;
+        }
+        
+        id = id + 1;
+        document.getElementById("inputId").value = id;
+        const nome = document.getElementById("nome").value;
+        const cognome = document.getElementById("cognome").value;
+        const indirizzo = document.getElementById("indirizzo").value;
+        const citta = document.getElementById("citta").value;
+        const cap = document.getElementById("cap").value;
+        const etaValue = document.getElementById("eta").value;
+        const eta = etaValue ? parseInt(etaValue) : null;
+        const dataNascita = document.getElementById("dataNascita").value;
+
+        var radios = document.getElementsByName("sesso");
+        var sesso = "Non specificato";
+        for (var i = 0; i < radios.length; i++) {
+            if (radios[i].checked) {
+                sesso = radios[i].value;
+                break;
+            }
+        }
+
+        const provincia = document.getElementById("provincia").value;
+
+        var checkbox = document.getElementsByName("mezzi");
+        var mezzi = [];
+        for (var i = 0; i < checkbox.length; i++) {
+            if (checkbox[i].checked) {
+                mezzi.push(checkbox[i].value);
+            }
+        }
+
+        let materie = [];
+        let selected = document.getElementById("materie").selectedOptions;
+        for (let i = 0; i < selected.length; i++) {
+            materie.push(selected[i].value);
+        }
+
+        let mezziPosseduti = mezzi.length > 0 ? mezzi.join(", ") : "Nessuno";
+        let materiePreferite = materie.length > 0 ? materie.join(", ") : "Nessuna";
+
+        let generazione = "";
+        if (eta === null) {
+            generazione = "Non definibile";
+        } else {
+            switch (true) {
+                case eta <= 12: generazione = "Generazione Alpha"; break;
+                case (eta >= 13 && eta <= 28): generazione = "Generazione Z"; break;
+                case (eta >= 29 && eta <= 44): generazione = "Millennials"; break;
+                case (eta >= 45 && eta <= 60): generazione = "Generazione X"; break;
+                default: generazione = "Boomer / Silent Gen";
+            }
+        }
+
+        const username = document.getElementById("username").value;
+        
+        const persona = {
+            id: id,
+            nome: nome,
+            cognome: cognome,
+            eta: eta,
+            dataNascita: dataNascita,
+            sesso: sesso,
+            provincia: provincia,
+            generazione: generazione,
+            mezziPosseduti: mezziPosseduti,
+            materiePreferite: materiePreferite,
+            username: username,
+            indirizzo: { via: indirizzo, citta: citta, cap: cap }
+        };
+
+        document.getElementById("output").innerHTML =
+            "<h2>Dati Inseriti</h2>" +
+            "<p><strong>👤 Nome:</strong> " + persona.nome + " " + persona.cognome + "</p>" +
+            "<p><strong>📍 Indirizzo:</strong> " + persona.indirizzo.via + " (" + persona.indirizzo.cap + " " + persona.indirizzo.citta + ")</p>" +
+            "<p><strong>🎂 Età:</strong> " + (persona.eta || "N/D") + " anni</p>" +
+            "<p><strong>📅 Nascita:</strong> " + (persona.dataNascita || "N/D") + "</p>" +
+            "<p><strong>⚧ Sesso:</strong> " + persona.sesso + "</p>" +
+            "<p><strong>🏛 Provincia:</strong> " + (persona.provincia || "N/D") + "</p>" +
+            "<p><strong>🚗 Mezzi:</strong> " + persona.mezziPosseduti + "</p>" +
+            "<p><strong>📚 Materie:</strong> " + persona.materiePreferite + "</p>" +
+            "<p><strong>🌟 Generazione:</strong> " + persona.generazione + "</p>" +
+            "<p><strong>🔑 Username:</strong> " + (persona.username || "Non specificato") + "</p>";
+        
+        persone.push(persona);
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    }
 </script>
 </body>
 </html>
-
