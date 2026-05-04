@@ -8,12 +8,14 @@
     <style>
         body {
             margin: 0;
+            padding: 20px; /* Aggiunto per schermi molto piccoli */
+            box-sizing: border-box;
             font-family: Arial, Helvetica, sans-serif;
             background: linear-gradient(135deg, #1e3c72, #2a5298);
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh; /* Corretto da height a min-height */
         }
 
         .card {
