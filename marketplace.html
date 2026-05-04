@@ -174,7 +174,6 @@ function mostraProdotti() {
     }
 
     prodotti.forEach((p, index) => {
-        // Uso dei Template Literals (backtick) per HTML più pulito
         container.innerHTML += `
             <div class="card">
                 <h3>${p.nome}</h3>
@@ -217,7 +216,6 @@ function logout() {
     carrello = [];
     aggiornaCarrello();
     
-    // Svuota i campi di input
     document.getElementById("nome").value = "";
     document.getElementById("email").value = "";
     document.getElementById("password").value = "";
@@ -309,11 +307,15 @@ function generaPDF() {
 
     carrello.forEach(p => {
         doc.text(`- ${p.nome}: €${p.prezzo}`, 15, y);
-        totale += parseFloat(p.prezzo) || 0; // Prova a sommare il prezzo
+        
+        // Fix per leggere sia i prezzi con il punto (10.50) che con la virgola (10,50)
+        let prezzoPulito = p.prezzo.replace(',', '.');
+        totale += parseFloat(prezzoPulito) || 0; 
+        
         y += 10;
     });
 
-    doc.line(10, y, 200, y); // Linea di separazione
+    doc.line(10, y, 200, y); 
     doc.setFont(undefined, 'bold');
     doc.text(`Totale Stimato: €${totale.toFixed(2)}`, 10, y + 10);
 
