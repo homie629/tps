@@ -3,1063 +3,323 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NEXUS Market — Il Tuo Marketplace</title>
+<title>Shop Semplice</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #080c14;
-    --surface: #0e1420;
-    --surface2: #151d2e;
-    --border: #1e2d45;
-    --accent: #00d4ff;
-    --accent2: #ff6b35;
-    --accent3: #7c3aed;
-    --text: #e8f0fe;
-    --text-dim: #6b82a8;
-    --success: #00e676;
-    --radius: 16px;
-    --font-display: 'Syne', sans-serif;
-    --font-body: 'DM Sans', sans-serif;
-  }
+    /* STILE ISPIRATO A W3SCHOOLS */
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+        background-color: #f1f1f1;
+        margin: 0;
+        padding: 20px;
+    }
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+    .container {
+        max-width: 800px;
+        margin: auto;
+        background-color: white;
+        padding: 20px;
+        box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+        border-radius: 5px;
+    }
 
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--font-body);
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
+    h1, h2 {
+        color: #333;
+        border-bottom: 2px solid #04AA6D;
+        padding-bottom: 5px;
+    }
 
-  /* ── BACKGROUND MESH ── */
-  body::before {
-    content: '';
-    position: fixed; inset: 0; z-index: 0;
-    background:
-      radial-gradient(ellipse 80% 50% at 20% 10%, rgba(0,212,255,0.06) 0%, transparent 60%),
-      radial-gradient(ellipse 60% 40% at 80% 80%, rgba(124,58,237,0.08) 0%, transparent 60%),
-      radial-gradient(ellipse 40% 60% at 60% 30%, rgba(255,107,53,0.04) 0%, transparent 60%);
-    pointer-events: none;
-  }
+    /* Stile Form e Input */
+    input[type=text], input[type=email], input[type=password], input[type=file] {
+        width: 100%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        display: inline-block;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
 
-  /* ── NAV ── */
-  nav {
-    position: sticky; top: 0; z-index: 100;
-    background: rgba(8,12,20,0.85);
-    backdrop-filter: blur(20px);
-    border-bottom: 1px solid var(--border);
-    padding: 0 2rem;
-    display: flex; align-items: center; justify-content: space-between;
-    height: 64px;
-  }
+    /* Stile Bottoni */
+    button {
+        background-color: #04AA6D;
+        color: white;
+        padding: 14px 20px;
+        margin: 8px 0;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+    }
 
-  .logo {
-    font-family: var(--font-display);
-    font-size: 1.4rem; font-weight: 800;
-    letter-spacing: -0.02em;
-    background: linear-gradient(135deg, var(--accent), var(--accent3));
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  }
+    button:hover {
+        background-color: #059862;
+    }
 
-  .logo span { color: var(--accent2); -webkit-text-fill-color: var(--accent2); }
+    .btn-danger {
+        background-color: #f44336;
+        padding: 8px 12px;
+        font-size: 14px;
+    }
 
-  .nav-actions { display: flex; gap: 1rem; align-items: center; }
+    .btn-danger:hover {
+        background-color: #da190b;
+    }
 
-  .btn {
-    font-family: var(--font-body);
-    font-size: 0.85rem; font-weight: 500;
-    padding: 0.5rem 1.2rem;
-    border-radius: 40px;
-    border: 1px solid var(--border);
-    cursor: pointer;
-    transition: all 0.2s;
-    background: transparent; color: var(--text);
-  }
+    /* Stile "Card" per i prodotti */
+    .card {
+        box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+        transition: 0.3s;
+        border-radius: 5px;
+        padding: 16px;
+        margin-bottom: 16px;
+        background-color: #fff;
+        border-left: 5px solid #04AA6D;
+    }
 
-  .btn:hover { border-color: var(--accent); color: var(--accent); }
+    .card:hover {
+        box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+    }
 
-  .btn-accent {
-    background: linear-gradient(135deg, var(--accent), var(--accent3));
-    border: none; color: #fff;
-    box-shadow: 0 0 20px rgba(0,212,255,0.3);
-  }
-  .btn-accent:hover { transform: translateY(-1px); box-shadow: 0 4px 30px rgba(0,212,255,0.4); color: #fff; }
+    /* Stile lista carrello */
+    ul {
+        list-style-type: none;
+        padding: 0;
+    }
 
-  .cart-btn {
-    position: relative;
-    background: var(--surface2);
-    border-color: var(--border);
-    display: flex; align-items: center; gap: 0.5rem;
-  }
-
-  .cart-count {
-    position: absolute; top: -8px; right: -8px;
-    background: var(--accent2);
-    color: #fff; font-size: 0.7rem; font-weight: 700;
-    width: 20px; height: 20px;
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    display: none;
-  }
-
-  /* ── HERO ── */
-  .hero {
-    position: relative; z-index: 1;
-    text-align: center;
-    padding: 5rem 2rem 3rem;
-  }
-
-  .hero-tag {
-    display: inline-block;
-    font-size: 0.75rem; font-weight: 600; letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--accent);
-    border: 1px solid rgba(0,212,255,0.3);
-    padding: 0.3rem 1rem; border-radius: 40px;
-    margin-bottom: 1.5rem;
-  }
-
-  .hero h1 {
-    font-family: var(--font-display);
-    font-size: clamp(2.5rem, 7vw, 5rem);
-    font-weight: 800; letter-spacing: -0.04em;
-    line-height: 1.05;
-    margin-bottom: 1rem;
-  }
-
-  .hero h1 em {
-    font-style: normal;
-    background: linear-gradient(135deg, var(--accent), var(--accent3));
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  }
-
-  .hero p {
-    font-size: 1.1rem; color: var(--text-dim);
-    max-width: 500px; margin: 0 auto 2.5rem;
-    line-height: 1.7;
-  }
-
-  /* ── FILE UPLOAD ZONE ── */
-  .upload-zone {
-    position: relative; z-index: 1;
-    max-width: 600px; margin: 0 auto 3rem;
-    background: var(--surface);
-    border: 2px dashed var(--border);
-    border-radius: var(--radius);
-    padding: 2.5rem;
-    text-align: center;
-    transition: all 0.3s;
-    cursor: pointer;
-  }
-
-  .upload-zone:hover, .upload-zone.drag-over {
-    border-color: var(--accent);
-    background: rgba(0,212,255,0.04);
-  }
-
-  .upload-icon {
-    font-size: 2.5rem; margin-bottom: 1rem;
-    display: block;
-  }
-
-  .upload-zone h3 {
-    font-family: var(--font-display);
-    font-size: 1.1rem; font-weight: 700;
-    margin-bottom: 0.5rem;
-  }
-
-  .upload-zone p { font-size: 0.85rem; color: var(--text-dim); margin-bottom: 1.2rem; }
-
-  #csvInput { display: none; }
-
-  .upload-label {
-    display: inline-block;
-    font-size: 0.85rem; font-weight: 500;
-    padding: 0.6rem 1.5rem;
-    border-radius: 40px;
-    background: linear-gradient(135deg, var(--accent), var(--accent3));
-    color: #fff; cursor: pointer;
-    transition: all 0.2s;
-  }
-  .upload-label:hover { transform: translateY(-1px); box-shadow: 0 4px 20px rgba(0,212,255,0.3); }
-
-  /* ── FILTERS ── */
-  .filters {
-    position: relative; z-index: 1;
-    display: flex; gap: 0.75rem; flex-wrap: wrap;
-    justify-content: center; padding: 0 2rem 2rem;
-  }
-
-  .filter-btn {
-    font-family: var(--font-body);
-    font-size: 0.8rem; font-weight: 500;
-    padding: 0.45rem 1.1rem; border-radius: 40px;
-    border: 1px solid var(--border);
-    background: var(--surface); color: var(--text-dim);
-    cursor: pointer; transition: all 0.2s;
-  }
-  .filter-btn.active, .filter-btn:hover {
-    border-color: var(--accent); color: var(--accent);
-    background: rgba(0,212,255,0.08);
-  }
-
-  /* ── GRID PRODOTTI ── */
-  #productsGrid {
-    position: relative; z-index: 1;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 1.5rem;
-    max-width: 1300px; margin: 0 auto;
-    padding: 0 2rem 4rem;
-  }
-
-  .product-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    overflow: hidden;
-    transition: all 0.3s;
-    animation: fadeUp 0.4s ease both;
-  }
-
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(24px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  .product-card:hover {
-    border-color: rgba(0,212,255,0.3);
-    transform: translateY(-4px);
-    box-shadow: 0 12px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(0,212,255,0.1);
-  }
-
-  .product-img {
-    width: 100%; height: 200px;
-    object-fit: cover;
-    display: block;
-  }
-
-  .product-img-placeholder {
-    width: 100%; height: 200px;
-    background: linear-gradient(135deg, var(--surface2), var(--border));
-    display: flex; align-items: center; justify-content: center;
-    font-size: 3rem;
-  }
-
-  .product-body { padding: 1.25rem; }
-
-  .product-category {
-    font-size: 0.7rem; font-weight: 600; letter-spacing: 0.12em;
-    text-transform: uppercase; color: var(--accent);
-    margin-bottom: 0.5rem; display: block;
-  }
-
-  .product-name {
-    font-family: var(--font-display);
-    font-size: 1.15rem; font-weight: 700;
-    margin-bottom: 0.5rem; line-height: 1.3;
-  }
-
-  .product-desc {
-    font-size: 0.82rem; color: var(--text-dim);
-    line-height: 1.6; margin-bottom: 1rem;
-  }
-
-  .product-specs {
-    display: grid; grid-template-columns: 1fr 1fr;
-    gap: 0.4rem; margin-bottom: 1rem;
-  }
-
-  .spec-item {
-    background: var(--surface2);
-    border-radius: 8px; padding: 0.4rem 0.6rem;
-  }
-
-  .spec-label {
-    font-size: 0.65rem; color: var(--text-dim);
-    text-transform: uppercase; letter-spacing: 0.05em;
-    display: block; margin-bottom: 0.1rem;
-  }
-
-  .spec-value { font-size: 0.8rem; font-weight: 500; }
-
-  .product-footer {
-    display: flex; align-items: center; justify-content: space-between;
-    padding-top: 1rem;
-    border-top: 1px solid var(--border);
-  }
-
-  .product-price {
-    font-family: var(--font-display);
-    font-size: 1.4rem; font-weight: 800;
-    color: var(--accent);
-  }
-
-  .btn-cart {
-    display: flex; align-items: center; gap: 0.4rem;
-    font-family: var(--font-body);
-    font-size: 0.82rem; font-weight: 600;
-    padding: 0.55rem 1.1rem; border-radius: 40px;
-    background: linear-gradient(135deg, var(--accent2), #ff4500);
-    border: none; color: #fff; cursor: pointer;
-    transition: all 0.2s;
-    box-shadow: 0 4px 15px rgba(255,107,53,0.3);
-  }
-  .btn-cart:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(255,107,53,0.4); }
-  .btn-cart.added { background: linear-gradient(135deg, var(--success), #00b248); }
-
-  /* ── EMPTY STATE ── */
-  .empty-state {
-    grid-column: 1/-1;
-    text-align: center; padding: 4rem 2rem;
-  }
-  .empty-state .big-icon { font-size: 4rem; margin-bottom: 1rem; }
-  .empty-state h3 {
-    font-family: var(--font-display);
-    font-size: 1.3rem; margin-bottom: 0.5rem;
-  }
-  .empty-state p { color: var(--text-dim); font-size: 0.9rem; }
-
-  /* ── MODAL BASE ── */
-  .modal-overlay {
-    position: fixed; inset: 0; z-index: 200;
-    background: rgba(0,0,0,0.8);
-    backdrop-filter: blur(8px);
-    display: flex; align-items: center; justify-content: center;
-    padding: 1rem;
-    opacity: 0; pointer-events: none;
-    transition: opacity 0.3s;
-  }
-  .modal-overlay.open { opacity: 1; pointer-events: all; }
-
-  .modal {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    width: 100%; max-width: 480px;
-    padding: 2rem;
-    transform: translateY(20px);
-    transition: transform 0.3s;
-    max-height: 90vh; overflow-y: auto;
-  }
-  .modal-overlay.open .modal { transform: translateY(0); }
-
-  .modal-header {
-    display: flex; align-items: center; justify-content: space-between;
-    margin-bottom: 1.5rem;
-  }
-  .modal-title {
-    font-family: var(--font-display);
-    font-size: 1.3rem; font-weight: 800;
-  }
-  .modal-close {
-    background: var(--surface2); border: 1px solid var(--border);
-    color: var(--text); width: 32px; height: 32px; border-radius: 50%;
-    cursor: pointer; font-size: 1rem; display: flex;
-    align-items: center; justify-content: center; transition: all 0.2s;
-  }
-  .modal-close:hover { border-color: var(--accent); color: var(--accent); }
-
-  /* ── FORM ── */
-  .form-group { margin-bottom: 1rem; }
-  .form-label {
-    display: block; font-size: 0.8rem; font-weight: 500;
-    color: var(--text-dim); margin-bottom: 0.4rem;
-    text-transform: uppercase; letter-spacing: 0.05em;
-  }
-  .form-input, .form-select {
-    width: 100%;
-    background: var(--surface2); border: 1px solid var(--border);
-    color: var(--text); font-family: var(--font-body);
-    font-size: 0.9rem; padding: 0.7rem 1rem;
-    border-radius: 10px; outline: none;
-    transition: border-color 0.2s;
-  }
-  .form-input:focus, .form-select:focus { border-color: var(--accent); }
-  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
-
-  /* ── CART MODAL ── */
-  .cart-modal { max-width: 560px; }
-
-  .cart-items { margin-bottom: 1.5rem; }
-  .cart-item {
-    display: flex; gap: 1rem; align-items: center;
-    padding: 0.75rem 0;
-    border-bottom: 1px solid var(--border);
-  }
-  .cart-item:last-child { border-bottom: none; }
-  .cart-item-icon { font-size: 1.5rem; }
-  .cart-item-info { flex: 1; }
-  .cart-item-name { font-weight: 600; font-size: 0.9rem; margin-bottom: 0.2rem; }
-  .cart-item-cat { font-size: 0.75rem; color: var(--text-dim); }
-  .cart-item-price { font-family: var(--font-display); font-weight: 700; color: var(--accent); }
-  .cart-item-remove {
-    background: none; border: 1px solid var(--border);
-    color: var(--text-dim); width: 28px; height: 28px;
-    border-radius: 50%; cursor: pointer; font-size: 0.8rem;
-    display: flex; align-items: center; justify-content: center;
-    transition: all 0.2s;
-  }
-  .cart-item-remove:hover { border-color: #ff4444; color: #ff4444; }
-
-  .cart-total {
-    background: var(--surface2); border-radius: 12px;
-    padding: 1rem 1.2rem;
-    display: flex; justify-content: space-between; align-items: center;
-    margin-bottom: 1rem;
-  }
-  .cart-total-label { font-size: 0.9rem; color: var(--text-dim); font-weight: 500; }
-  .cart-total-price {
-    font-family: var(--font-display);
-    font-size: 1.6rem; font-weight: 800; color: var(--accent);
-  }
-
-  .cart-empty-msg { text-align: center; padding: 2rem; color: var(--text-dim); }
-  .cart-empty-msg .big-icon { font-size: 3rem; display: block; margin-bottom: 0.5rem; }
-
-  /* ── TOAST ── */
-  .toast {
-    position: fixed; bottom: 2rem; right: 2rem; z-index: 999;
-    background: var(--surface);
-    border: 1px solid var(--success);
-    color: var(--text);
-    padding: 0.8rem 1.4rem; border-radius: 40px;
-    font-size: 0.85rem; font-weight: 500;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.4);
-    transform: translateY(80px); opacity: 0;
-    transition: all 0.3s;
-    display: flex; align-items: center; gap: 0.5rem;
-  }
-  .toast.show { transform: translateY(0); opacity: 1; }
-
-  /* ── STEP INDICATOR ── */
-  .steps {
-    display: flex; gap: 0; margin-bottom: 1.5rem;
-    background: var(--surface2); border-radius: 40px; padding: 4px;
-  }
-  .step-btn {
-    flex: 1; padding: 0.5rem; border-radius: 40px; border: none;
-    background: transparent; color: var(--text-dim);
-    font-size: 0.8rem; font-weight: 500; cursor: pointer;
-    transition: all 0.2s;
-  }
-  .step-btn.active {
-    background: linear-gradient(135deg, var(--accent), var(--accent3));
-    color: #fff;
-  }
-
-  /* ── SUCCESS SCREEN ── */
-  .success-screen {
-    text-align: center; padding: 1rem;
-  }
-  .success-icon { font-size: 4rem; margin-bottom: 1rem; display: block; }
-  .success-screen h3 {
-    font-family: var(--font-display);
-    font-size: 1.4rem; margin-bottom: 0.5rem;
-  }
-  .success-screen p { color: var(--text-dim); font-size: 0.9rem; margin-bottom: 1.5rem; }
-
-  /* scrollbar */
-  ::-webkit-scrollbar { width: 6px; }
-  ::-webkit-scrollbar-track { background: var(--bg); }
-  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    ul li {
+        background: #eee;
+        margin: 5px 0;
+        padding: 10px;
+        border-radius: 4px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
 </style>
 </head>
+
 <body>
 
-<!-- NAV -->
-<nav>
-  <div class="logo">NEXUS<span>.</span>market</div>
-  <div class="nav-actions">
-    <button class="btn" onclick="openModal('authModal')">👤 Accedi / Registrati</button>
-    <button class="btn cart-btn" onclick="openModal('cartModal')">
-      🛒 Carrello
-      <span class="cart-count" id="cartCount">0</span>
-    </button>
-  </div>
-</nav>
+<div class="container">
+    <h1>Negozio Online</h1>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-tag">✦ Marketplace Multi-categoria</div>
-  <h1>Compra. Vendi.<br><em>Scopri.</em></h1>
-  <p>Smartphone, auto, moto, libri e molto altro. Carica il tuo catalogo CSV e inizia a vendere in pochi secondi.</p>
+    <h2>Carica Catalogo</h2>
+    <input type="file" id="fileInput" accept=".csv">
 
-  <!-- UPLOAD ZONE -->
-  <div class="upload-zone" id="uploadZone" onclick="document.getElementById('csvInput').click()">
-    <span class="upload-icon">📂</span>
-    <h3>Carica il tuo catalogo CSV</h3>
-    <p>Trascina il file qui oppure clicca per sfogliare.<br>Scarica il <a href="#" onclick="downloadSampleCSV(event)" style="color:var(--accent)">CSV di esempio</a></p>
-    <label class="upload-label" onclick="event.stopPropagation(); document.getElementById('csvInput').click()">
-      Sfoglia file
-    </label>
-    <input type="file" id="csvInput" accept=".csv" onchange="handleCSV(this)">
-  </div>
+    <h2>Registrazione</h2>
+    <input type="text" id="nome" placeholder="Il tuo Nome">
+    <input type="email" id="email" placeholder="La tua Email">
+    <input type="password" id="password" placeholder="Scegli una Password">
+    <button onclick="registrati()">Registrati</button>
+    <button onclick="logout()" style="background-color: #555;">Logout</button>
 
-  <!-- FILTERS -->
-  <div class="filters" id="filtersBar" style="display:none">
-    <button class="filter-btn active" data-cat="all" onclick="filterProducts('all', this)">🌐 Tutti</button>
-  </div>
-</section>
-
-<!-- PRODOTTI GRID -->
-<main>
-  <div id="productsGrid">
-    <div class="empty-state">
-      <div class="big-icon">📋</div>
-      <h3>Nessun prodotto caricato</h3>
-      <p>Carica un file CSV per visualizzare i prodotti in vendita.</p>
-    </div>
-  </div>
-</main>
-
-<!-- MODAL: REGISTRAZIONE / LOGIN -->
-<div class="modal-overlay" id="authModal">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-title" id="authTitle">Crea il tuo account</div>
-      <button class="modal-close" onclick="closeModal('authModal')">✕</button>
-    </div>
-    <div class="steps">
-      <button class="step-btn active" onclick="switchAuth('register', this)">Registrati</button>
-      <button class="step-btn" onclick="switchAuth('login', this)">Accedi</button>
+    <h2>Prodotti</h2>
+    <div id="prodotti">
+        <p><i>Carica un file CSV per visualizzare i prodotti.</i></p>
     </div>
 
-    <div id="registerForm">
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">Nome *</label>
-          <input class="form-input" id="regNome" type="text" placeholder="Mario">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Cognome *</label>
-          <input class="form-input" id="regCognome" type="text" placeholder="Rossi">
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Email *</label>
-        <input class="form-input" id="regEmail" type="email" placeholder="mario@email.it">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Telefono</label>
-        <input class="form-input" id="regTel" type="tel" placeholder="+39 333 1234567">
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">Città</label>
-          <input class="form-input" id="regCitta" type="text" placeholder="Milano">
-        </div>
-        <div class="form-group">
-          <label class="form-label">CAP</label>
-          <input class="form-input" id="regCap" type="text" placeholder="20100">
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Indirizzo</label>
-        <input class="form-input" id="regIndirizzo" type="text" placeholder="Via Roma 1">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Password *</label>
-        <input class="form-input" id="regPassword" type="password" placeholder="••••••••">
-      </div>
-      <button class="btn btn-accent" style="width:100%; padding:0.9rem; font-size:0.95rem;" onclick="registerUser()">
-        Crea Account →
-      </button>
-    </div>
-
-    <div id="loginForm" style="display:none">
-      <div class="form-group">
-        <label class="form-label">Email</label>
-        <input class="form-input" id="loginEmail" type="email" placeholder="mario@email.it">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Password</label>
-        <input class="form-input" id="loginPassword" type="password" placeholder="••••••••">
-      </div>
-      <button class="btn btn-accent" style="width:100%; padding:0.9rem; font-size:0.95rem;" onclick="loginUser()">
-        Accedi →
-      </button>
-    </div>
-  </div>
-</div>
-
-<!-- MODAL: CARRELLO -->
-<div class="modal-overlay" id="cartModal">
-  <div class="modal cart-modal">
-    <div class="modal-header">
-      <div class="modal-title">🛒 Il tuo Carrello</div>
-      <button class="modal-close" onclick="closeModal('cartModal')">✕</button>
-    </div>
-    <div id="cartContent"></div>
-  </div>
-</div>
-
-<!-- MODAL: CHECKOUT SUCCESS -->
-<div class="modal-overlay" id="successModal">
-  <div class="modal" style="max-width:400px; text-align:center;">
-    <div class="success-screen">
-      <span class="success-icon">🎉</span>
-      <h3>Acquisto Completato!</h3>
-      <p>Grazie per il tuo ordine. Riceverai la conferma via email. Puoi scaricare la ricevuta in PDF.</p>
-      <button class="btn btn-accent" style="width:100%; margin-bottom:0.75rem;" onclick="generatePDF()">
-        📄 Scarica Ricevuta PDF
-      </button>
-      <button class="btn" style="width:100%;" onclick="closeModal('successModal')">Continua gli acquisti</button>
-    </div>
-  </div>
-</div>
-
-<!-- TOAST -->
-<div class="toast" id="toast">
-  <span id="toastIcon">✅</span>
-  <span id="toastMsg">Operazione completata</span>
+    <h2>Carrello</h2>
+    <ul id="carrello"></ul>
+    <button onclick="completaAcquisto()">Completa Acquisto</button>
+    <button onclick="generaPDF()" style="background-color: #2196F3;">Scarica PDF Ordine</button>
 </div>
 
 <script>
-// ── STATO GLOBALE
-let products = [];
-let cart = [];
-let currentUser = null;
-let allCategories = new Set();
-let lastOrder = null;
+let prodotti = [];
+let carrello = [];
+let utenteRegistrato = null;
 
-// ── ICONE CATEGORIE
-const catIcons = {
-  'smartphone': '📱', 'auto': '🚗', 'moto': '🏍️', 'libro': '📚',
-  'tablet': '📟', 'tv': '📺', 'bici': '🚲', 'default': '🏷️'
-};
+// LETTURA CSV
+document.getElementById("fileInput").addEventListener("change", function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
 
-function getCatIcon(cat) {
-  const k = cat.toLowerCase();
-  for (const [key, icon] of Object.entries(catIcons)) {
-    if (k.includes(key)) return icon;
-  }
-  return catIcons.default;
-}
+    const reader = new FileReader();
 
-// ── MODAL
-function openModal(id) { document.getElementById(id).classList.add('open'); }
-function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+    reader.onload = function(event) {
+        const testo = event.target.result;
+        const righe = testo.split("\n");
 
-// Chiudi cliccando fuori
-document.querySelectorAll('.modal-overlay').forEach(el => {
-  el.addEventListener('click', e => { if (e.target === el) closeModal(el.id); });
+        prodotti = [];
+
+        for (let i = 1; i < righe.length; i++) {
+            let colonne = righe[i].split(",");
+            if (colonne.length < 4) continue;
+
+            let prodotto = {
+                tipo: colonne[0].trim(),
+                nome: colonne[1].trim(),
+                descrizione: colonne[2].trim(),
+                prezzo: colonne[3].trim()
+            };
+
+            prodotti.push(prodotto);
+        }
+
+        mostraProdotti();
+    };
+
+    reader.readAsText(file);
 });
 
-// ── TOAST
-function showToast(msg, icon = '✅', duration = 3000) {
-  const t = document.getElementById('toast');
-  document.getElementById('toastMsg').textContent = msg;
-  document.getElementById('toastIcon').textContent = icon;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), duration);
-}
+// MOSTRA PRODOTTI
+function mostraProdotti() {
+    const container = document.getElementById("prodotti");
+    container.innerHTML = "";
 
-// ── AUTH
-function switchAuth(mode, btn) {
-  document.querySelectorAll('.step-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  document.getElementById('registerForm').style.display = mode === 'register' ? 'block' : 'none';
-  document.getElementById('loginForm').style.display = mode === 'login' ? 'block' : 'none';
-  document.getElementById('authTitle').textContent = mode === 'register' ? 'Crea il tuo account' : 'Bentornato!';
-}
-
-function registerUser() {
-  const nome = document.getElementById('regNome').value.trim();
-  const cognome = document.getElementById('regCognome').value.trim();
-  const email = document.getElementById('regEmail').value.trim();
-  const password = document.getElementById('regPassword').value;
-  if (!nome || !cognome || !email || !password) { showToast('Compila i campi obbligatori *', '⚠️'); return; }
-  if (!email.includes('@')) { showToast('Email non valida', '⚠️'); return; }
-  currentUser = {
-    nome, cognome, email,
-    telefono: document.getElementById('regTel').value,
-    citta: document.getElementById('regCitta').value,
-    cap: document.getElementById('regCap').value,
-    indirizzo: document.getElementById('regIndirizzo').value
-  };
-  closeModal('authModal');
-  showToast(`Benvenuto, ${nome}! 🎉`);
-  updateNavUser();
-}
-
-function loginUser() {
-  const email = document.getElementById('loginEmail').value.trim();
-  if (!email) { showToast('Inserisci email e password', '⚠️'); return; }
-  currentUser = { nome: 'Utente', cognome: '', email };
-  closeModal('authModal');
-  showToast('Accesso effettuato!');
-  updateNavUser();
-}
-
-function updateNavUser() {
-  if (currentUser) {
-    document.querySelector('.nav-actions .btn:first-child').textContent =
-      `👤 ${currentUser.nome}`;
-  }
-}
-
-// ── CSV PARSING
-function handleCSV(input) {
-  const file = input.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    try {
-      const text = e.target.result;
-      products = parseCSV(text);
-      allCategories = new Set(products.map(p => p.categoria));
-      renderFilters();
-      renderProducts(products);
-      document.getElementById('uploadZone').innerHTML = `
-        <span class="upload-icon">✅</span>
-        <h3>${products.length} prodotti caricati</h3>
-        <p>Da <strong>${file.name}</strong> — ${allCategories.size} categorie</p>
-        <label class="upload-label" onclick="event.stopPropagation(); document.getElementById('csvInput').click()">Cambia file</label>
-        <input type="file" id="csvInput" accept=".csv" onchange="handleCSV(this)" style="display:none">
-      `;
-      showToast(`${products.length} prodotti caricati con successo!`);
-    } catch(err) {
-      showToast('Errore nel parsing del CSV', '❌');
+    if (prodotti.length === 0) {
+        container.innerHTML = "<p>Nessun prodotto trovato.</p>";
+        return;
     }
-  };
-  reader.readAsText(file, 'UTF-8');
+
+    prodotti.forEach((p, index) => {
+        // Uso dei Template Literals (backtick) per HTML più pulito
+        container.innerHTML += `
+            <div class="card">
+                <h3>${p.nome}</h3>
+                <p><strong>Tipo:</strong> ${p.tipo}</p>
+                <p>${p.descrizione}</p>
+                <p><strong>Prezzo:</strong> €${p.prezzo}</p>
+                <button onclick="aggiungiCarrello(${index})">Aggiungi al carrello</button>
+            </div>
+        `;
+    });
 }
 
-function parseCSV(text) {
-  const lines = text.trim().split('\n');
-  const headers = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g, ''));
-  return lines.slice(1).map(line => {
-    const values = parseCSVLine(line);
-    const obj = {};
-    headers.forEach((h, i) => { obj[h] = (values[i] || '').trim().replace(/^"|"$/g, ''); });
-    return obj;
-  }).filter(p => p.categoria && p.nome);
-}
+// REGISTRAZIONE
+function registrati() {
+    let nome = document.getElementById("nome").value.trim();
+    let email = document.getElementById("email").value.trim();
+    let password = document.getElementById("password").value.trim();
 
-function parseCSVLine(line) {
-  const result = [];
-  let current = '';
-  let inQuotes = false;
-  for (let i = 0; i < line.length; i++) {
-    if (line[i] === '"') { inQuotes = !inQuotes; }
-    else if (line[i] === ',' && !inQuotes) { result.push(current); current = ''; }
-    else { current += line[i]; }
-  }
-  result.push(current);
-  return result;
-}
-
-// ── FILTRI
-function renderFilters() {
-  const bar = document.getElementById('filtersBar');
-  bar.style.display = 'flex';
-  bar.innerHTML = `<button class="filter-btn active" data-cat="all" onclick="filterProducts('all', this)">🌐 Tutti</button>`;
-  allCategories.forEach(cat => {
-    const icon = getCatIcon(cat);
-    bar.innerHTML += `<button class="filter-btn" data-cat="${cat}" onclick="filterProducts('${cat}', this)">${icon} ${cat}</button>`;
-  });
-}
-
-function filterProducts(cat, btn) {
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  const filtered = cat === 'all' ? products : products.filter(p => p.categoria === cat);
-  renderProducts(filtered);
-}
-
-// ── RENDER PRODOTTI
-function renderProducts(prods) {
-  const grid = document.getElementById('productsGrid');
-  if (!prods.length) {
-    grid.innerHTML = `<div class="empty-state"><div class="big-icon">🔍</div><h3>Nessun prodotto trovato</h3><p>Prova con un'altra categoria.</p></div>`;
-    return;
-  }
-  grid.innerHTML = prods.map((p, i) => renderCard(p, i)).join('');
-}
-
-function renderCard(p, idx) {
-  const icon = getCatIcon(p.categoria);
-  const price = parseFloat(p.prezzo) || 0;
-  const formatted = price.toLocaleString('it-IT', { style: 'currency', currency: 'EUR' });
-
-  // Campi dinamici da CSV
-  let specsHtml = '';
-  for (let n = 1; n <= 4; n++) {
-    const lbl = p[`campo${n}_label`];
-    const val = p[`campo${n}_valore`];
-    if (lbl && val) {
-      specsHtml += `<div class="spec-item"><span class="spec-label">${lbl}</span><span class="spec-value">${val}</span></div>`;
+    if (nome === "" || email === "" || password === "") {
+        alert("Per favore, compila tutti i campi!");
+        return;
     }
-  }
 
-  const imgHtml = p.immagine_url
-    ? `<img class="product-img" src="${p.immagine_url}" alt="${p.nome}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
-    : '';
+    utenteRegistrato = {
+        nome: nome,
+        email: email,
+        password: password
+    };
 
-  return `
-    <article class="product-card" style="animation-delay:${idx * 0.05}s">
-      ${imgHtml}
-      <div class="product-img-placeholder" style="${p.immagine_url ? 'display:none' : ''}">
-        ${icon}
-      </div>
-      <div class="product-body">
-        <span class="product-category">${icon} ${p.categoria}</span>
-        <div class="product-name">${p.nome}</div>
-        <div class="product-desc">${p.descrizione || ''}</div>
-        ${specsHtml ? `<div class="product-specs">${specsHtml}</div>` : ''}
-        <div class="product-footer">
-          <div class="product-price">${formatted}</div>
-          <button class="btn-cart" id="btn_${idx}" onclick="addToCart(${idx}, this)">
-            🛒 Aggiungi
-          </button>
-        </div>
-      </div>
-    </article>
-  `;
+    alert(`Benvenuto, ${nome}! Registrazione completata.`);
 }
 
-// ── CARRELLO
-function addToCart(idx, btn) {
-  if (!currentUser) {
-    showToast('Registrati prima di acquistare! 👤', '⚠️');
-    openModal('authModal');
-    return;
-  }
-  const prod = products[idx];
-  cart.push({ ...prod, cartId: Date.now() });
-  btn.classList.add('added');
-  btn.textContent = '✓ Aggiunto';
-  setTimeout(() => { btn.classList.remove('added'); btn.innerHTML = '🛒 Aggiungi'; }, 2000);
-  updateCartCount();
-  showToast(`"${prod.nome}" aggiunto al carrello!`);
-}
-
-function updateCartCount() {
-  const el = document.getElementById('cartCount');
-  el.style.display = cart.length ? 'flex' : 'none';
-  el.textContent = cart.length;
-}
-
-function removeFromCart(cartId) {
-  cart = cart.filter(i => i.cartId !== cartId);
-  updateCartCount();
-  renderCart();
-}
-
-function renderCart() {
-  const content = document.getElementById('cartContent');
-  if (!cart.length) {
-    content.innerHTML = `<div class="cart-empty-msg"><span class="big-icon">🛒</span><p>Il tuo carrello è vuoto.</p></div>`;
-    return;
-  }
-  const total = cart.reduce((s, i) => s + (parseFloat(i.prezzo) || 0), 0);
-  const totalFmt = total.toLocaleString('it-IT', { style: 'currency', currency: 'EUR' });
-
-  const itemsHtml = cart.map(item => {
-    const icon = getCatIcon(item.categoria);
-    const price = parseFloat(item.prezzo || 0).toLocaleString('it-IT', { style: 'currency', currency: 'EUR' });
-    return `
-      <div class="cart-item">
-        <span class="cart-item-icon">${icon}</span>
-        <div class="cart-item-info">
-          <div class="cart-item-name">${item.nome}</div>
-          <div class="cart-item-cat">${item.categoria}</div>
-        </div>
-        <div class="cart-item-price">${price}</div>
-        <button class="cart-item-remove" onclick="removeFromCart(${item.cartId})">✕</button>
-      </div>
-    `;
-  }).join('');
-
-  content.innerHTML = `
-    <div class="cart-items">${itemsHtml}</div>
-    <div class="cart-total">
-      <span class="cart-total-label">Totale ordine</span>
-      <span class="cart-total-price">${totalFmt}</span>
-    </div>
-    <button class="btn btn-accent" style="width:100%; padding:0.9rem; font-size:0.95rem; margin-bottom:0.5rem;" onclick="checkout()">
-      💳 Procedi all'acquisto
-    </button>
-    <button class="btn" style="width:100%;" onclick="clearCart()">🗑️ Svuota carrello</button>
-  `;
-}
-
-function clearCart() {
-  cart = [];
-  updateCartCount();
-  renderCart();
-}
-
-function checkout() {
-  if (!currentUser) { showToast('Registrati prima!', '⚠️'); openModal('authModal'); return; }
-  lastOrder = {
-    user: { ...currentUser },
-    items: [...cart],
-    total: cart.reduce((s, i) => s + (parseFloat(i.prezzo) || 0), 0),
-    date: new Date().toLocaleDateString('it-IT', { day:'2-digit', month:'long', year:'numeric' }),
-    orderNum: 'NX-' + Math.floor(Math.random() * 90000 + 10000)
-  };
-  cart = [];
-  updateCartCount();
-  closeModal('cartModal');
-  openModal('successModal');
-}
-
-// ── PDF con jsPDF
-function generatePDF() {
-  if (!lastOrder) return;
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-
-  // Sfondo header
-  doc.setFillColor(8, 12, 20);
-  doc.rect(0, 0, 210, 45, 'F');
-
-  // Logo
-  doc.setTextColor(0, 212, 255);
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(28);
-  doc.text('NEXUS.market', 15, 25);
-
-  // Sottotitolo header
-  doc.setTextColor(107, 130, 168);
-  doc.setFontSize(9);
-  doc.setFont('helvetica', 'normal');
-  doc.text('Piattaforma Marketplace Multi-categoria', 15, 33);
-
-  // RICEVUTA label
-  doc.setTextColor(255, 107, 53);
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(11);
-  doc.text('RICEVUTA D\'ORDINE', 150, 22, { align: 'right' });
-
-  doc.setTextColor(200, 200, 200);
-  doc.setFontSize(9);
-  doc.setFont('helvetica', 'normal');
-  doc.text(`N° ${lastOrder.orderNum}`, 195, 29, { align: 'right' });
-  doc.text(`Data: ${lastOrder.date}`, 195, 35, { align: 'right' });
-
-  // Dati cliente
-  doc.setTextColor(30, 45, 69);
-  doc.setFillColor(245, 248, 255);
-  doc.rect(12, 52, 186, 38, 'F');
-  doc.setDrawColor(200, 215, 240);
-  doc.rect(12, 52, 186, 38, 'S');
-
-  doc.setTextColor(0, 100, 180);
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(9);
-  doc.text('DATI ACQUIRENTE', 18, 60);
-
-  doc.setTextColor(50, 50, 50);
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(9);
-  const u = lastOrder.user;
-  doc.text(`Nome: ${u.nome} ${u.cognome}`, 18, 68);
-  doc.text(`Email: ${u.email}`, 18, 74);
-  if (u.telefono) doc.text(`Telefono: ${u.telefono}`, 110, 68);
-  if (u.indirizzo) doc.text(`Indirizzo: ${u.indirizzo}, ${u.cap} ${u.citta}`, 18, 80);
-
-  // Tabella prodotti
-  let y = 102;
-  doc.setFillColor(8, 12, 20);
-  doc.rect(12, y - 7, 186, 9, 'F');
-  doc.setTextColor(0, 212, 255);
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(8);
-  doc.text('PRODOTTO', 18, y - 1);
-  doc.text('CATEGORIA', 110, y - 1);
-  doc.text('PREZZO (€)', 180, y - 1, { align: 'right' });
-
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(9);
-  let alternate = false;
-
-  lastOrder.items.forEach(item => {
-    if (alternate) {
-      doc.setFillColor(248, 250, 255);
-      doc.rect(12, y, 186, 9, 'F');
+// LOGOUT
+function logout() {
+    if (!utenteRegistrato) {
+        alert("Nessun utente loggato.");
+        return;
     }
-    alternate = !alternate;
-    doc.setTextColor(30, 30, 30);
-    doc.text(item.nome.substring(0, 45), 18, y + 6);
-    doc.setTextColor(100, 100, 100);
-    doc.text(item.categoria, 110, y + 6);
-    doc.setTextColor(30, 30, 30);
-    doc.setFont('helvetica', 'bold');
-    doc.text(parseFloat(item.prezzo).toLocaleString('it-IT', { minimumFractionDigits: 2 }), 198, y + 6, { align: 'right' });
-    doc.setFont('helvetica', 'normal');
-    doc.setDrawColor(220, 230, 245);
-    doc.line(12, y + 9, 198, y + 9);
-    y += 10;
-  });
-
-  // Totale
-  y += 5;
-  doc.setFillColor(0, 212, 255);
-  doc.rect(130, y, 68, 14, 'F');
-  doc.setTextColor(8, 12, 20);
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(10);
-  doc.text('TOTALE:', 135, y + 9);
-  const totalFmt = lastOrder.total.toLocaleString('it-IT', { minimumFractionDigits: 2 });
-  doc.text(`€ ${totalFmt}`, 196, y + 9, { align: 'right' });
-
-  // Footer
-  doc.setFillColor(8, 12, 20);
-  doc.rect(0, 272, 210, 25, 'F');
-  doc.setTextColor(107, 130, 168);
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(8);
-  doc.text('NEXUS.market — Piattaforma marketplace online', 105, 281, { align: 'center' });
-  doc.text('Documento generato automaticamente. Non ha valore fiscale.', 105, 287, { align: 'center' });
-  doc.setTextColor(0, 212, 255);
-  doc.text('www.nexusmarket.it', 105, 293, { align: 'center' });
-
-  doc.save(`Ricevuta_NEXUS_${lastOrder.orderNum}.pdf`);
-  showToast('PDF scaricato con successo! 📄');
+    utenteRegistrato = null;
+    carrello = [];
+    aggiornaCarrello();
+    
+    // Svuota i campi di input
+    document.getElementById("nome").value = "";
+    document.getElementById("email").value = "";
+    document.getElementById("password").value = "";
+    
+    alert("Logout effettuato con successo!");
 }
 
-// ── SAMPLE CSV DOWNLOAD
-function downloadSampleCSV(e) {
-  e.stopPropagation();
-  const csv = `categoria,nome,descrizione,prezzo,immagine_url,campo1_label,campo1_valore,campo2_label,campo2_valore,campo3_label,campo3_valore,campo4_label,campo4_valore
-Smartphone,iPhone 15 Pro,Potente smartphone Apple,1199.00,,Schermo,6.1",RAM,8 GB,Storage,256 GB,Sistema,iOS 17
-Auto,Tesla Model 3,Berlina elettrica,45000.00,,Motore,Elettrico,Autonomia,560 km,CV,283,Colore,Bianco
-Moto,Ducati Panigale V4,Superbike italiana,28000.00,,Cilindrata,1103 cc,Potenza,214 CV,Peso,175 kg,Colore,Rosso
-Libro,Il Nome della Rosa,Romanzo di Umberto Eco,18.90,,Autore,Umberto Eco,Pagine,503,Genere,Storico,Anno,1980`;
-  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a'); a.href = url; a.download = 'prodotti_esempio.csv'; a.click();
-  URL.revokeObjectURL(url);
+// AGGIUNGI AL CARRELLO
+function aggiungiCarrello(index) {
+    if (!utenteRegistrato) {
+        alert("Devi registrarti prima di poter acquistare!");
+        return;
+    }
+
+    carrello.push(prodotti[index]);
+    aggiornaCarrello();
 }
 
-// ── CART MODAL: render al click
-document.getElementById('cartModal').addEventListener('transitionend', () => {
-  if (document.getElementById('cartModal').classList.contains('open')) renderCart();
-});
-document.querySelector('[onclick="openModal(\'cartModal\')"]').addEventListener('click', () => {
-  setTimeout(renderCart, 50);
-});
+// RIMUOVI DAL CARRELLO
+function rimuoviDalCarrello(index) {
+    carrello.splice(index, 1);
+    aggiornaCarrello();
+}
 
-// ── DRAG & DROP
-const zone = document.getElementById('uploadZone');
-zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
-zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
-zone.addEventListener('drop', e => {
-  e.preventDefault();
-  zone.classList.remove('drag-over');
-  const file = e.dataTransfer.files[0];
-  if (file && file.name.endsWith('.csv')) {
-    const input = document.getElementById('csvInput');
-    const dt = new DataTransfer(); dt.items.add(file);
-    input.files = dt.files;
-    handleCSV(input);
-  } else { showToast('Carica un file .csv valido', '⚠️'); }
-});
+// AGGIORNA CARRELLO
+function aggiornaCarrello() {
+    const lista = document.getElementById("carrello");
+    lista.innerHTML = "";
+
+    if (carrello.length === 0) {
+        lista.innerHTML = "<li>Il tuo carrello è vuoto.</li>";
+        return;
+    }
+
+    carrello.forEach((p, index) => {
+        lista.innerHTML += `
+            <li>
+                <span>${p.nome} - <strong>€${p.prezzo}</strong></span>
+                <button class="btn-danger" onclick="rimuoviDalCarrello(${index})">Rimuovi</button>
+            </li>
+        `;
+    });
+}
+
+// COMPLETA ACQUISTO
+function completaAcquisto() {
+    if (!utenteRegistrato) {
+        alert("Registrati prima per completare l'acquisto!");
+        return;
+    }
+
+    if (carrello.length === 0) {
+        alert("Il tuo carrello è vuoto!");
+        return;
+    }
+
+    alert(`Acquisto completato con successo da ${utenteRegistrato.nome}! Grazie per il tuo ordine.`);
+
+    carrello = [];
+    aggiornaCarrello();
+}
+
+// GENERA PDF
+function generaPDF() {
+    if (!utenteRegistrato) {
+        alert("Registrati prima per generare il PDF!");
+        return;
+    }
+    
+    if (carrello.length === 0) {
+        alert("Aggiungi qualcosa al carrello prima di scaricare il PDF.");
+        return;
+    }
+
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    doc.setFontSize(18);
+    doc.text("Riepilogo Ordine - Negozio Semplice", 10, 20);
+    
+    doc.setFontSize(12);
+    doc.text("Nome Cliente: " + utenteRegistrato.nome, 10, 35);
+    doc.text("Email: " + utenteRegistrato.email, 10, 42);
+
+    doc.text("Prodotti Acquistati:", 10, 55);
+    
+    let y = 65;
+    let totale = 0;
+
+    carrello.forEach(p => {
+        doc.text(`- ${p.nome}: €${p.prezzo}`, 15, y);
+        totale += parseFloat(p.prezzo) || 0; // Prova a sommare il prezzo
+        y += 10;
+    });
+
+    doc.line(10, y, 200, y); // Linea di separazione
+    doc.setFont(undefined, 'bold');
+    doc.text(`Totale Stimato: €${totale.toFixed(2)}`, 10, y + 10);
+
+    doc.save("ordine_shop.pdf");
+}
 </script>
+
 </body>
 </html>
