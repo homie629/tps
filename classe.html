@@ -1,0 +1,159 @@
+
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Anagrafica della classe</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 30px;
+            background-color: #f2f2f2;
+        }
+
+        h1 {
+            color: #23476a;
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #999;
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #23476a;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #e8eef5;
+        }
+
+        #messaggio {
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Anagrafica della classe 5A</h1>
+
+    <button id="carica">Carica anagrafica</button>
+
+    <p id="messaggio">Premi il pulsante per caricare i dati.</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Cognome</th>
+                <th>Data di nascita</th>
+                <th>Classe</th>
+            </tr>
+        </thead>
+
+        <tbody id="risultato"></tbody>
+    </table>
+
+    <script>
+        document.getElementById("carica").addEventListener("click", function () {
+
+            const xhr = new XMLHttpRequest();
+
+            xhr.open("GET", "classe.xml", true);
+
+            xhr.onload = function () {
+                const messaggio = document.getElementById("messaggio");
+                const tabella = document.getElementById("risultato");
+
+                tabella.replaceChildren();
+
+                if (xhr.status === 200) {
+
+                    const parser = new DOMParser();
+
+                    const xml = parser.parseFromString(
+                        xhr.responseText,
+                        "application/xml"
+                    );
+
+                    if (xml.querySelector("parsererror") ||
+                        xml.documentElement.tagName !== "classe") {
+                        messaggio.textContent = "Errore: file XML non valido.";
+                        return;
+                    }
+
+                    const studenti = xml.getElementsByTagName("studente");
+
+                    if (studenti.length === 0) {
+                        messaggio.textContent = "Nessuno studente trovato.";
+                        return;
+                    }
+
+                    for (let i = 0; i < studenti.length; i++) {
+
+                        const studente = studenti[i];
+
+                        const nome = studente.getElementsByTagName("nome")[0];
+                        const cognome = studente.getElementsByTagName("cognome")[0];
+                        const nascita = studente.getElementsByTagName("dataNascita")[0];
+                        const classe = studente.getElementsByTagName("classe")[0];
+
+                        if (!nome || !cognome || !nascita || !classe) {
+                            tabella.replaceChildren();
+                            messaggio.textContent =
+                                "Errore: dati mancanti nel file XML.";
+                            return;
+                        }
+
+                        const riga = document.createElement("tr");
+
+                        const valori = [
+                            nome.textContent,
+                            cognome.textContent,
+                            nascita.textContent,
+                            classe.textContent
+                        ];
+
+                        for (const valore of valori) {
+                            const cella = document.createElement("td");
+                            cella.textContent = valore;
+                            riga.appendChild(cella);
+                        }
+
+                        tabella.appendChild(riga);
+                    }
+
+                    messaggio.textContent =
+                        "Anagrafica caricata correttamente: " +
+                        studenti.length + " studenti.";
+
+                } else {
+                    messaggio.textContent =
+                        "Errore nel caricamento del file XML. Codice HTTP: " +
+                        xhr.status;
+                }
+            };
+
+            xhr.onerror = function () {
+                document.getElementById("messaggio").textContent =
+                    "Errore di rete durante la richiesta.";
+            };
+
+            xhr.send();
+        });
+    </script>
+
+</body>
+</html>
